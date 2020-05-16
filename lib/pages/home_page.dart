@@ -1,6 +1,6 @@
+import 'package:carros/pages/carros_page.dart';
 import 'package:carros/utils/network.dart';
 import 'package:carros/utils/prefs.dart';
-import 'package:carros/widgets/carro_listview.dart';
 import 'package:carros/widgets/drawer_list.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +24,6 @@ class _HomePageState extends State<HomePage>
     int tabIdx = await Prefs.getInt("tabIdx");
 
     _tabController = TabController(length: 3, vsync: this);
-
 
     setState(() {
       _tabController.index = tabIdx;
@@ -65,13 +64,12 @@ class _HomePageState extends State<HomePage>
           : TabBarView(
               controller: _tabController,
               children: <Widget>[
-                CarroListView(TipoCarro.classicos),
-                CarroListView(TipoCarro.esportivos),
-                CarroListView(TipoCarro.luxo),
+                CarrosPage(TipoCarro.classicos),
+                CarrosPage(TipoCarro.esportivos),
+                CarrosPage(TipoCarro.luxo),
               ],
             ),
       drawer: DrawerList(),
     );
   }
-
 }

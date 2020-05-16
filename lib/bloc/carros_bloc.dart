@@ -6,10 +6,11 @@ import 'package:carros/utils/network.dart';
 
 class CarrosBlock extends SimpleBlock<List<Carro>>{
 
-  fetch(TipoCarro tipo) async {
+  Future<List<Carro>> fetch(TipoCarro tipo) async {
     try {
       List<Carro> carros = await Network.getCarros(tipo);
       add(carros);
+      return carros;
     } catch (error, exception) {
       addError(error);
     }

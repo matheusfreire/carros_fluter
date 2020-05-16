@@ -5,57 +5,13 @@ import 'package:carros/utils/nav.dart';
 import 'package:carros/utils/network.dart';
 import 'package:flutter/material.dart';
 
-class CarroListView extends StatefulWidget {
-  TipoCarro tipo;
+class CarroListView extends StatelessWidget {
+  final List<Carro> carros;
 
-  CarroListView(this.tipo);
-
-  @override
-  _CarroListViewState createState() => _CarroListViewState();
-}
-
-class _CarroListViewState extends State<CarroListView> with AutomaticKeepAliveClientMixin<CarroListView> {
-  List<Carro> carros;
-
-  final _block = CarrosBlock();
-
-  @override
-  void initState() {
-    super.initState();
-    _block.fetch(widget.tipo);
-  }
+  CarroListView(this.carros);
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return StreamBuilder(
-      stream: _block.stream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasError) {
-          print(snapshot.error);
-          return Center(
-            child: Text(
-              "Não foi possível buscar os carros",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 22,
-              ),
-            ),
-          );
-        }
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        List<Carro> carros = snapshot.data;
-        return _listView(carros);
-      },
-    );
-  }
-
-  _listView(List<Carro> carros) {
     return Container(
       padding: EdgeInsets.all(16),
       child: ListView.builder(
@@ -71,7 +27,8 @@ class _CarroListViewState extends State<CarroListView> with AutomaticKeepAliveCl
                   children: <Widget>[
                     Center(
                       child: Image.network(
-                        c.urlFoto ?? "https://storage.googleapis.com/carros-flutterweb.appspot.com/convite-animado-relampago-mcqueen-carros-2.jpg",
+                        c.urlFoto ??
+                            "https://storage.googleapis.com/carros-flutterweb.appspot.com/convite-animado-relampago-mcqueen-carros-2.jpg",
                         width: 250,
                       ),
                     ),
@@ -95,7 +52,7 @@ class _CarroListViewState extends State<CarroListView> with AutomaticKeepAliveCl
                       children: <Widget>[
                         FlatButton(
                           child: const Text('DETALHES'),
-                          onPressed: () => _onClickCarro(c),
+                          onPressed: () => _onClickCarro(context,c),
                         ),
                         FlatButton(
                           child: const Text('SHARE'),
@@ -113,16 +70,7 @@ class _CarroListViewState extends State<CarroListView> with AutomaticKeepAliveCl
     );
   }
 
-  @override
-  bool get wantKeepAlive => true;
-
-  _onClickCarro(Carro c) {
+  _onClickCarro(context,Carro c) {
     push(context, CarroPage(c));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _block.dispose();
   }
 }

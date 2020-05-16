@@ -1,16 +1,31 @@
+import 'package:carros/bloc/description_model.dart';
 import 'package:carros/model/carro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
-class CarroPage extends StatelessWidget {
+class CarroPage extends StatefulWidget {
   Carro carro;
 
   CarroPage(this.carro);
 
   @override
+  _CarroPageState createState() => _CarroPageState();
+}
+
+class _CarroPageState extends State<CarroPage> {
+  final _model = DescriptionModel();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDescription();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(carro.nome),
+          title: Text(widget.carro.nome),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.place),
@@ -63,7 +78,7 @@ class CarroPage extends StatelessWidget {
       padding: EdgeInsets.all(16),
       child: ListView(
         children: <Widget>[
-          Image.network(carro.urlFoto),
+          Image.network(widget.carro.urlFoto),
           _blockOne(),
           Divider(),
           _blockTwo()
@@ -80,14 +95,29 @@ class CarroPage extends StatelessWidget {
           height: 16,
         ),
         Text(
-          carro.descricao,
+          widget.carro.descricao,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         SizedBox(
           height: 16,
         ),
-        Text(
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        Observer(
+          builder: (_) {
+            if(_model.exception != null){
+              return Text(
+                "Não foi possível buscar descrição completa",
+              );
+            }
+            if(_model.result != null){
+              return Text(
+                _model.result,
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         )
       ],
     );
@@ -101,11 +131,11 @@ class CarroPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              carro.nome,
+              widget.carro.nome,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
-              carro.tipo,
+              widget.carro.tipo,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -136,4 +166,8 @@ class CarroPage extends StatelessWidget {
   _onClickShare() {}
 
   _onClickFavorite() {}
+
+  _fetchDescription() {
+    _model.fetch();
+  }
 }

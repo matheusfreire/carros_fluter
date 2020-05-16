@@ -16,8 +16,7 @@ class CarroListView extends StatefulWidget {
   _CarroListViewState createState() => _CarroListViewState();
 }
 
-class _CarroListViewState extends State<CarroListView>
-    with AutomaticKeepAliveClientMixin<CarroListView> {
+class _CarroListViewState extends State<CarroListView> with AutomaticKeepAliveClientMixin<CarroListView> {
   List<Carro> carros;
 
   final _model = CarrosModel();

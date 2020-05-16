@@ -68,7 +68,7 @@ class Network{
   }
 
   static Future<String> getLoremipsum() async{
-    var url = 'https://lorimpsum.net/api';
+    var url = 'https://loripsum.net/api';
 
     var response = await http.get(url);
 

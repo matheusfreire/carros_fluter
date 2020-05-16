@@ -46,7 +46,6 @@ class Network{
   }
 
   static Future<List<Carro>> getCarros(TipoCarro tipoCarro) async {
-    try{
       Usuario user = await Usuario.get();
       String tipo = tipoCarro.toString().replaceAll("TipoCarro.", "");
 
@@ -55,7 +54,7 @@ class Network{
         "Authorization": "Bearer ${user.token}"
       };
 
-      var url = '$api/v2/123carros/tipo/$tipo';
+      var url = '$api/v2/1carros/tipo/$tipo';
       print('Request url:  $url');
 
       var response = await http.get(url, headers: headers);
@@ -66,9 +65,5 @@ class Network{
       final carros = list.map<Carro>((map) => Carro.fromJson(map)).toList();
 
       return carros;
-    } catch(error, exception){
-      print("$error >> $exception");
-      throw error;
-    }
   }
 }

@@ -38,7 +38,6 @@ class _CarroListViewState extends State<CarroListView>
     return Observer(
       builder: (_) {
         List<Carro> carros = _model.carros;
-        print("error: ${_model.error}");
         if (_model.error != null) {
           return TextError(
             "Não foi possível buscar os carros\n\nClique aqui para tentar novamente",

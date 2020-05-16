@@ -54,7 +54,7 @@ class Network{
         "Authorization": "Bearer ${user.token}"
       };
 
-      var url = '$api/v2/1carros/tipo/$tipo';
+      var url = '$api/v2/carros/tipo/$tipo';
       print('Request url:  $url');
 
       var response = await http.get(url, headers: headers);

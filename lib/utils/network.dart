@@ -66,4 +66,17 @@ class Network{
 
       return carros;
   }
+
+  static Future<String> getLoremipsum() async{
+    var url = 'https://lorimpsum.net/api';
+
+    var response = await http.get(url);
+
+    String text = response.body;
+
+    text = text.replaceAll("<p>", "");
+    text = text.replaceAll("</p>", "");
+
+    return text;
+  }
 }

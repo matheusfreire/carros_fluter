@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:carros/model/carro.dart';
 import 'package:carros/model/usuario.dart';
 import 'package:carros/utils/api_response.dart';
+import 'package:carros/utils/db/carro_dao.dart';
 import 'package:http/http.dart' as http;
 
 enum TipoCarro{
@@ -63,7 +64,11 @@ class Network{
 
       List list = jsonDecode(json);
 
-      final carros = list.map<Carro>((map) => Carro.fromJson(map)).toList();
+      final carros = list.map<Carro>((m) => Carro.fromMap(m)).toList();
+
+      final dao = new CarroDAO();
+
+      carros.forEach(dao.save);
 
       return carros;
     } catch(error, exception){

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:carros/model/usuario.dart';
 import 'package:carros/utils/api_response.dart';
-import 'package:carros/utils/network.dart';
+import 'package:carros/utils/api_interface.dart';
 
 class LoginBlock{
 
@@ -12,7 +12,7 @@ class LoginBlock{
 
   Future<ApiResponse<Usuario>> login(String login, String senha) async {
     _streamControllerProgress.add(true);
-    ApiResponse response = await Network.login(login, senha);
+    ApiResponse response = await ApiInterface.login(login, senha);
 
     _streamControllerProgress.add(false);
     return response;

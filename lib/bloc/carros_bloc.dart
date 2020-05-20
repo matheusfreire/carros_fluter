@@ -2,17 +2,37 @@ import 'dart:async';
 
 import 'package:carros/bloc/simple_block.dart';
 import 'package:carros/model/carro.dart';
+import 'package:carros/utils/api_interface.dart';
+import 'package:carros/utils/db/carro_dao.dart';
 import 'package:carros/utils/network.dart';
 
 class CarrosBlock extends SimpleBlock<List<Carro>>{
 
-  Future<List<Carro>> fetch(TipoCarro tipo) async {
+  Future<List<Carro>> fetch(TipoCarro tipoCarro) async {
     try {
-      List<Carro> carros = await Network.getCarros(tipo);
+
+      String tipo = tipoCarro.toString().replaceAll("TipoCarro.", "");
+
+      if(! await isNetworkOn()){
+        List<Carro> carros = await CarroDAO().findAllByTipo(tipo);
+        add(carros);
+        return carros;
+      }
+
+      List<Carro> carros = await ApiInterface.getCarros(tipo);
+
+      _saveCarIntoDB(carros);
       add(carros);
       return carros;
-    } catch (error, exception) {
+    } catch (error) {
       addError(error);
+    }
+  }
+
+  void _saveCarIntoDB(List<Carro> carros) {
+    if(carros.isNotEmpty){
+      final dao = new CarroDAO();
+      carros.forEach(dao.save);
     }
   }
 

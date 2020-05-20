@@ -13,7 +13,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 15), () {
+    Future.delayed(Duration(seconds: 5), () {
         push(context, LoginPage());
     });
     DbHelper.getInstance().db;

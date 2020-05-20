@@ -1,3 +1,4 @@
+import 'package:carros/model/carro.dart';
 import 'package:carros/model/entity.dart';
 
 class Favorito extends Entity{
@@ -16,6 +17,11 @@ class Favorito extends Entity{
     data['id'] = this.id;
     data['nome'] = this.nome;
     return data;
+  }
+
+  Favorito.fromCarro(Carro c) {
+    this.id = c.id;
+    this.nome = c.nome;
   }
 
 }

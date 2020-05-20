@@ -7,9 +7,9 @@ import 'package:sqflite/sqflite.dart';
 class DbHelper{
 
   static final DbHelper _instance= DbHelper.getInstance();
+  DbHelper.getInstance();
 
   factory DbHelper() => _instance;
-  DbHelper.getInstance();
 
   static Database _db;
 
@@ -27,7 +27,7 @@ class DbHelper{
     String path = join(databasesPath, 'carros.db');
     print("db $path");
 
-    var db = await openDatabase(path, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    var db = await openDatabase(path, version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return db;
   }
 

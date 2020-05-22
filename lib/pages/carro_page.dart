@@ -16,6 +16,8 @@ class CarroPage extends StatefulWidget {
 class _CarroPageState extends State<CarroPage> {
   final _descriptionBloc = DescriptionBloc();
 
+  Color color = Colors.grey;
+
   @override
   void initState() {
     super.initState();
@@ -149,7 +151,7 @@ class _CarroPageState extends State<CarroPage> {
             IconButton(
               icon: Icon(
                 Icons.favorite,
-                color: Colors.red,
+                color: color,
                 size: 40,
               ),
               onPressed: _onClickFavorite,
@@ -170,8 +172,13 @@ class _CarroPageState extends State<CarroPage> {
 
   _onClickShare() {}
 
-  _onClickFavorite() {
-    FavoritoBloc.favoritar(widget.carro);
+  _onClickFavorite() async {
+    bool favoritar = await FavoritoBloc().favoritar(widget.carro);
+    setState(() {
+      // ignore: unnecessary_statements
+      print(favoritar);
+      color = favoritar ? Colors.red : Colors.grey;
+    });
   }
 
   _fetchDescription() {

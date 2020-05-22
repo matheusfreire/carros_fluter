@@ -1,7 +1,5 @@
-import 'package:carros/bloc/carros_bloc.dart';
-import 'package:carros/bloc/favoritos_bloc.dart';
+import 'package:carros/bloc/favorito_bloc.dart';
 import 'package:carros/model/carro.dart';
-import 'package:carros/utils/api_interface.dart';
 import 'package:carros/widgets/carro_listview.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +10,7 @@ class FavoritosPage extends StatefulWidget {
 }
 
 class _FavoritosPageState extends State<FavoritosPage> with AutomaticKeepAliveClientMixin<FavoritosPage> {
-  final _bloc = FavoritosBlock();
+  final _bloc = FavoritoBloc();
 
   @override
   bool get wantKeepAlive => true;

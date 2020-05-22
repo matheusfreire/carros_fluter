@@ -28,4 +28,9 @@ class FavoritoBloc extends SimpleBloc<List<Carro>> {
     }
   }
 
+  Future<bool> isFavorito(Carro c) async {
+    final dao = FavoritoDao();
+    return dao.exists(c.id);
+  }
+
 }

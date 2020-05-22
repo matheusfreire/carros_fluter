@@ -15,12 +15,17 @@ class CarroPage extends StatefulWidget {
 
 class _CarroPageState extends State<CarroPage> {
   final _descriptionBloc = DescriptionBloc();
-
+  final _favoritoBloc = FavoritoBloc();
   Color color = Colors.grey;
 
   @override
   void initState() {
     super.initState();
+    _favoritoBloc.isFavorito(widget.carro).then((fav) {
+      setState(() {
+        color = fav ? Colors.red : Colors.grey;
+      });
+    });
     _fetchDescription();
   }
 

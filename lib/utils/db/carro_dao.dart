@@ -14,13 +14,7 @@ class CarroDAO extends BaseDao<Carro>{
     return Carro.fromMap(map);
   }
 
-  Future<List<Carro>> findAllByTipo(String tipo) async {
-    final dbClient = await db;
-
-    final list = await dbClient.rawQuery('select * from $tableName where tipo =? ',[tipo]);
-
-    return list.map<Carro>((json) => fromMap(json)).toList();
+  Future<List<Carro>> findAllByTipo(String tipo) {
+    return findAllQuery('select * from $tableName where tipo =? ',[tipo]);
   }
-
-
 }

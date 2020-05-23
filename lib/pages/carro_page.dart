@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/bloc/description_bloc.dart';
 import 'package:carros/bloc/favorito_bloc.dart';
 import 'package:carros/model/carro.dart';
+import 'package:carros/pages/carro_form_page.dart';
+import 'package:carros/utils/nav.dart';
 import 'package:flutter/material.dart';
 
 class CarroPage extends StatefulWidget {
@@ -70,7 +72,11 @@ class _CarroPageState extends State<CarroPage> {
   _onClickPopUpMenu(int value) {
     switch (value) {
       case 1:
-        print("Editar");
+        push(
+            context,
+            CarroFormPage(
+              carro: widget.carro,
+            ));
         break;
       case 2:
         print("Deletar");

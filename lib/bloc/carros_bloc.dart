@@ -3,10 +3,14 @@ import 'dart:async';
 import 'package:carros/bloc/simple_bloc.dart';
 import 'package:carros/model/carro.dart';
 import 'package:carros/utils/api_interface.dart';
+import 'package:carros/utils/api_response.dart';
 import 'package:carros/utils/db/carro_dao.dart';
 import 'package:carros/utils/network.dart';
 
-class CarrosBlock extends SimpleBloc<List<Carro>>{
+class CarrosBloc{
+
+  var blocList = SimpleBloc<List<Carro>>();
+  var blocSingle = SimpleBloc<Carro>();
 
   Future<List<Carro>> fetch(TipoCarro tipoCarro) async {
     try {
@@ -15,17 +19,17 @@ class CarrosBlock extends SimpleBloc<List<Carro>>{
 
       if(! await isNetworkOn()){
         List<Carro> carros = await CarroDAO().findAllByTipo(tipo);
-        add(carros);
+        blocList.add(carros);
         return carros;
       }
 
       List<Carro> carros = await ApiInterface.getCarros(tipo);
 
       _saveCarIntoDB(carros);
-      add(carros);
+      blocList.add(carros);
       return carros;
     } catch (error) {
-      addError(error);
+      blocList.addError(error);
     }
   }
 
@@ -34,6 +38,11 @@ class CarrosBlock extends SimpleBloc<List<Carro>>{
       final dao = new CarroDAO();
       carros.forEach(dao.save);
     }
+  }
+
+  Future<ApiResponse> save(Carro c) async{
+    ApiResponse response = await ApiInterface.saveCarro(c);
+    return response;
   }
 
 }

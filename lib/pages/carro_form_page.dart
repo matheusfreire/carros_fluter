@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carros/bloc/carros_bloc.dart';
 import 'package:carros/model/carro.dart';
+import 'package:carros/utils/alert.dart';
+import 'package:carros/utils/api_response.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +19,7 @@ class CarroFormPage extends StatefulWidget {
 
 class _CarroFormPageState extends State<CarroFormPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _carroBloc = CarrosBloc();
 
   final tNome = TextEditingController();
   final tDesc = TextEditingController();
@@ -202,9 +206,13 @@ class _CarroFormPageState extends State<CarroFormPage> {
       _showProgress = true;
     });
 
-    print("Salvar o carro $c");
 
-    await Future.delayed(Duration(seconds: 3));
+    ApiResponse response = await _carroBloc.save(c);
+    if (response.success) {
+      alert(context, "Carro salvado com sucesso");
+    } else {
+      alert(context, response.msg);
+    }
 
     setState(() {
       _showProgress = false;

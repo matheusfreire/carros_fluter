@@ -15,7 +15,7 @@ class CarrosPage extends StatefulWidget {
 
 class _CarrosPageState extends State<CarrosPage> with AutomaticKeepAliveClientMixin<CarrosPage> {
 
-  final _bloc = CarrosBlock();
+  final _bloc = CarrosBloc();
 
   @override
   bool get wantKeepAlive => true;
@@ -31,7 +31,7 @@ class _CarrosPageState extends State<CarrosPage> with AutomaticKeepAliveClientMi
     super.build(context);
 
     return StreamBuilder(
-      stream: _bloc.stream,
+      stream: _bloc.blocList.stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text("Não foi possível buscar os carros");
@@ -59,7 +59,7 @@ class _CarrosPageState extends State<CarrosPage> with AutomaticKeepAliveClientMi
   @override
   void dispose() {
     super.dispose();
-    _bloc.dispose();
+    _bloc.blocList.dispose();
   }
 
 }

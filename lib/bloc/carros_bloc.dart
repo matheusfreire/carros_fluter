@@ -45,4 +45,8 @@ class CarrosBloc{
     return response;
   }
 
+  Future<ApiResponse> delete(Carro carro) {
+    return ApiInterface.deleteCarro(carro);
+  }
+
 }

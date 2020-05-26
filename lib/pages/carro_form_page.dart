@@ -209,7 +209,9 @@ class _CarroFormPageState extends State<CarroFormPage> {
 
     ApiResponse response = await _carroBloc.save(c);
     if (response.success) {
-      alert(context, "Carro salvado com sucesso");
+      alert(context, "Carro salvado com sucesso", callBack: () {
+        Navigator.pop(context);
+      });
     } else {
       alert(context, response.msg);
     }

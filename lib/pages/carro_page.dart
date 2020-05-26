@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carros/bloc/carros_bloc.dart';
 import 'package:carros/bloc/description_bloc.dart';
 import 'package:carros/bloc/favorito_bloc.dart';
 import 'package:carros/model/carro.dart';
 import 'package:carros/pages/carro_form_page.dart';
+import 'package:carros/utils/alert.dart';
+import 'package:carros/utils/api_response.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +21,8 @@ class CarroPage extends StatefulWidget {
 class _CarroPageState extends State<CarroPage> {
   final _descriptionBloc = DescriptionBloc();
   final _favoritoBloc = FavoritoBloc();
+  final _carroBloc = CarrosBloc();
+
   Color color = Colors.grey;
 
   @override
@@ -79,7 +84,7 @@ class _CarroPageState extends State<CarroPage> {
             ));
         break;
       case 2:
-        print("Deletar");
+        deletar();
         break;
       case 3:
         print("Compartilhar");
@@ -93,7 +98,7 @@ class _CarroPageState extends State<CarroPage> {
       child: ListView(
         children: <Widget>[
           CachedNetworkImage(
-            imageUrl: widget.carro.urlFoto,
+            imageUrl: widget.carro.urlFoto ?? "https://storage.googleapis.com/carros-flutterweb.appspot.com/convite-animado-relampago-mcqueen-carros-2.jpg",
           ),
           _blockOne(),
           Divider(),
@@ -194,5 +199,23 @@ class _CarroPageState extends State<CarroPage> {
 
   _fetchDescription() {
     _descriptionBloc.fetch();
+  }
+
+  void deletar() async {
+    ApiResponse response = await _carroBloc.delete(widget.carro);
+    if (response.success) {
+      alert(context, response.msg, callBack: () {
+        Navigator.pop(context);
+      });
+    } else {
+      alert(context, response.msg);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _favoritoBloc.dispose();
+    _descriptionBloc.dispose();
   }
 }

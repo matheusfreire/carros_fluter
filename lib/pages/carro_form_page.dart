@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/bloc/carros_bloc.dart';
 import 'package:carros/model/carro.dart';
@@ -7,6 +9,7 @@ import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CarroFormPage extends StatefulWidget {
   final Carro carro;
@@ -24,6 +27,8 @@ class _CarroFormPageState extends State<CarroFormPage> {
   final tNome = TextEditingController();
   final tDesc = TextEditingController();
   final tTipo = TextEditingController();
+
+  File _image;
 
   int _radioIndex = 0;
 
@@ -105,6 +110,7 @@ class _CarroFormPageState extends State<CarroFormPage> {
             keyboardType: TextInputType.text,
             validator: _validateNome,
           ),
+          Divider(),
           AppButton(
             "Salvar",
             onPressed: _onClickSalvar,
@@ -116,14 +122,33 @@ class _CarroFormPageState extends State<CarroFormPage> {
   }
 
   _headerFoto() {
-    return carro != null
-        ? CachedNetworkImage(
-      imageUrl: carro.urlFoto,
-    )
-        : Image.asset(
-      "assets/images/camera.png",
-      height: 150,
+    return InkWell(
+      onTap: _onClickFoto,
+      child: _image != null
+          ? Image.file(
+              _image,
+              height: 150,
+            )
+          : carro != null
+              ? CachedNetworkImage(
+                  imageUrl: carro.urlFoto,
+                  height: 150,
+                )
+              : Image.asset(
+                  "assets/images/camera.png",
+                  height: 150,
+                ),
     );
+  }
+
+  _onClickFoto() async {
+    final pickedFile =
+        await new ImagePicker().getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
 
   _radioTipo() {
@@ -205,7 +230,6 @@ class _CarroFormPageState extends State<CarroFormPage> {
     setState(() {
       _showProgress = true;
     });
-
 
     ApiResponse response = await _carroBloc.save(c);
     if (response.success) {

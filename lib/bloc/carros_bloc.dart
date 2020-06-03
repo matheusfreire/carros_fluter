@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:carros/bloc/simple_bloc.dart';
 import 'package:carros/model/carro.dart';
@@ -40,7 +41,15 @@ class CarrosBloc{
     }
   }
 
-  Future<ApiResponse> save(Carro c) async{
+  Future<ApiResponse> save(Carro c, File image) async{
+    if(image != null){
+      ApiResponse responsePhoto = await ApiInterface.savePhoto(image);
+      if(responsePhoto.success) {
+        String urlFoto = responsePhoto.result;
+        c.urlFoto = urlFoto;
+      }
+    }
+
     ApiResponse response = await ApiInterface.saveCarro(c);
     return response;
   }

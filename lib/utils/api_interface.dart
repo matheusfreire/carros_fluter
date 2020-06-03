@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:carros/model/carro.dart';
 import 'package:carros/model/usuario.dart';
 import 'package:carros/utils/api_response.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 enum TipoCarro { classicos, esportivos, luxo }
 
@@ -11,11 +13,11 @@ class ApiInterface {
 
   static final MSG_GENERICA_ERRO_DELETE = "Não foi possível deletar o carro";
   static final MSG_GENERICA_ERRO_SALVAR = "Não foi possível salvar o carro";
-  static get api => "https://carros-springboot.herokuapp.com/api";
+  static get api => "https://carros-springboot.herokuapp.com/api/v2";
 
   static Future<ApiResponse<Usuario>> login(String login, String senha) async {
     try {
-      var url = '$api/v2/login';
+      var url = '$api/login';
 
       Map params = {"username": login, "password": senha};
       Map<String, String> headers = {"Content-Type": "application/json"};
@@ -45,7 +47,7 @@ class ApiInterface {
   static Future<List<Carro>> getCarros(String tipo) async {
     try {
       Map<String, String> headers = await _headers();
-      var url = '$api/v2/carros/tipo/$tipo';
+      var url = '$api/carros/tipo/$tipo';
       print('Request url:  $url');
 
       var response = await http.get(url, headers: headers);
@@ -90,7 +92,7 @@ class ApiInterface {
 
       String carro = c.toJson();
 
-      var url = '$api/v2/carros';
+      var url = '$api/carros';
       if(c.id != null){
         url += "/${c.id}";
       }
@@ -119,7 +121,7 @@ class ApiInterface {
     try {
       Map<String, String> headers = await _headers();
 
-      var url = '$api/v2/carros/${c.id}';
+      var url = '$api/carros/${c.id}';
       print('Request url:  $url');
 
       var response = await http.delete(url, headers: headers);
@@ -136,6 +138,33 @@ class ApiInterface {
     } catch (e) {
       print(e);
       return ApiResponse.error(MSG_GENERICA_ERRO_DELETE);
+    }
+  }
+
+  static Future<ApiResponse<String>> savePhoto(File image) async{
+    try{
+      Map<String, String> headers = await _headers();
+
+      var url = '$api/upload';
+
+      String base64Image = base64Encode(image.readAsBytesSync());
+      String fileName = path.basename(image.path);
+
+      var params = {
+        "fileName" : fileName,
+        "mimeType": "image/jpeg",
+        "base64" : base64Image
+      };
+
+      String json = jsonEncode(params);
+      final response = await http.post(url, headers: headers, body: json);
+      Map<String, dynamic> map = jsonDecode(response.body);
+      String urlPhoto = map["url"];
+
+      return ApiResponse.success(urlPhoto);
+    } catch(e){
+      print(e);
+      return ApiResponse.error("Não foi possível salvar foto");
     }
   }
 }

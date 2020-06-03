@@ -231,7 +231,7 @@ class _CarroFormPageState extends State<CarroFormPage> {
       _showProgress = true;
     });
 
-    ApiResponse response = await _carroBloc.save(c);
+    ApiResponse response = await _carroBloc.save(c, _image);
     if (response.success) {
       alert(context, "Carro salvado com sucesso", callBack: () {
         Navigator.pop(context);

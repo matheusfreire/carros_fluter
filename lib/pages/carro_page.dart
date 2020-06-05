@@ -6,6 +6,8 @@ import 'package:carros/model/carro.dart';
 import 'package:carros/pages/carro_form_page.dart';
 import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/api_response.dart';
+import 'package:carros/utils/carro_event.dart';
+import 'package:carros/utils/event_bus.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -203,6 +205,7 @@ class _CarroPageState extends State<CarroPage> {
     ApiResponse response = await _carroBloc.delete(widget.carro);
     if (response.success) {
       alert(context, response.msg, callBack: () {
+        EventBus.get(context).sendEvent(CarroEvent("carro_deletado", widget.carro.tipo));
         Navigator.pop(context);
       });
     } else {

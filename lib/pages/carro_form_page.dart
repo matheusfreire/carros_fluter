@@ -5,6 +5,8 @@ import 'package:carros/bloc/carros_bloc.dart';
 import 'package:carros/model/carro.dart';
 import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/api_response.dart';
+import 'package:carros/utils/carro_event.dart';
+import 'package:carros/utils/event_bus.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -231,7 +233,8 @@ class _CarroFormPageState extends State<CarroFormPage> {
 
     ApiResponse response = await _carroBloc.save(c, _image);
     if (response.success) {
-      alert(context, "Carro salvado com sucesso", callBack: () {
+      alert(context, "Carro salvo com sucesso", callBack: () {
+        EventBus.get(context).sendEvent(CarroEvent("carro_salvo", c.tipo));
         Navigator.pop(context);
       });
     } else {

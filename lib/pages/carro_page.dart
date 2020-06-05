@@ -204,7 +204,7 @@ class _CarroPageState extends State<CarroPage> {
   void deletar() async {
     ApiResponse response = await _carroBloc.delete(widget.carro);
     if (response.success) {
-      alert(context, response.msg, callBack: () {
+      alert(context, "Carro deletado com sucesso", callBack: () {
         EventBus.get(context).sendEvent(CarroEvent("carro_deletado", widget.carro.tipo));
         Navigator.pop(context);
       });

@@ -1,7 +1,6 @@
 import 'package:carros/pages/carro_form_page.dart';
 import 'package:carros/pages/carros_page.dart';
 import 'package:carros/pages/favoritos_page.dart';
-import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/api_interface.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/utils/prefs.dart';
@@ -34,7 +33,6 @@ class _HomePageState extends State<HomePage>
     });
 
     _tabController.addListener(() {
-      print(">> ${_tabController.index}");
       Prefs.setInt("tabIdx", _tabController.index);
     });
   }

@@ -225,8 +225,6 @@ class _CarroFormPageState extends State<CarroFormPage> {
     c.descricao = tDesc.text;
     c.tipo = _getTipo();
 
-    print("Carro: $c");
-
     setState(() {
       _showProgress = true;
     });
@@ -243,7 +241,5 @@ class _CarroFormPageState extends State<CarroFormPage> {
     setState(() {
       _showProgress = false;
     });
-
-    print("Fim.");
   }
 }

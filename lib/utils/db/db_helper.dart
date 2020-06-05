@@ -25,8 +25,6 @@ class DbHelper{
   Future _initDb() async {
     String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'carros.db');
-    print("db $path");
-
     var db = await openDatabase(path, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
     return db;
   }
@@ -39,7 +37,6 @@ class DbHelper{
     try {
       for(String sql in sqls){
         if(sql.trim().isNotEmpty){
-          print("sql: $sql");
           await db.execute(s);
         }
       }
@@ -49,8 +46,6 @@ class DbHelper{
   }
 
   Future<FutureOr<void>> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    print("_onUpgrade: oldVersion: $oldVersion > newVersion: $newVersion");
-
     if(newVersion == 2) {
       await db.execute("CREATE TABLE favorito(id INTEGER PRIMARY KEY, nome TEXT)");
     }

@@ -24,12 +24,7 @@ class ApiInterface {
 
       String s = json.encode(params);
 
-      print(">> $s");
-
       var response = await http.post(url, body: s, headers: headers);
-      print('Request url:  ${response.request.url}');
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       Map mapResponse = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -39,7 +34,6 @@ class ApiInterface {
       }
       return ApiResponse.error(mapResponse["error"]);
     } catch (error, exception) {
-      print("Erro no login $error > $exception");
       return ApiResponse.error("Não foi possível fazer o login");
     }
   }
@@ -48,7 +42,6 @@ class ApiInterface {
     try {
       Map<String, String> headers = await _headers();
       var url = '$api/carros/tipo/$tipo';
-      print('Request url:  $url');
 
       var response = await http.get(url, headers: headers);
       String json = response.body;
@@ -57,7 +50,6 @@ class ApiInterface {
 
       return list.map<Carro>((m) => Carro.fromMap(m)).toList();
     } catch (error, exception) {
-      print("$error >> $exception");
       throw error;
     }
   }
@@ -73,8 +65,6 @@ class ApiInterface {
 
   static Future<String> getDescription() async {
     var url = 'https://loripsum.net/api';
-
-    print("GET > $url");
 
     var response = await http.get(url);
 
@@ -96,8 +86,6 @@ class ApiInterface {
       if(c.id != null){
         url += "/${c.id}";
       }
-      print('Request url:  $url');
-
       var response = await (c.id == null ? http.post(url, headers: headers, body: carro) : http.put(url, headers: headers, body: carro));
 
       if(response.body == null || response.body.isEmpty){
@@ -112,7 +100,6 @@ class ApiInterface {
       }
       return ApiResponse.error(mapResponse["error"]);
     } catch (e) {
-      print(e);
       return ApiResponse.error(MSG_GENERICA_ERRO_SALVAR);
     }
   }
@@ -122,7 +109,6 @@ class ApiInterface {
       Map<String, String> headers = await _headers();
 
       var url = '$api/carros/${c.id}';
-      print('Request url:  $url');
 
       var response = await http.delete(url, headers: headers);
 
@@ -136,7 +122,6 @@ class ApiInterface {
       }
       return ApiResponse.error(mapResponse["error"]);
     } catch (e) {
-      print(e);
       return ApiResponse.error(MSG_GENERICA_ERRO_DELETE);
     }
   }
@@ -163,7 +148,6 @@ class ApiInterface {
 
       return ApiResponse.success(urlPhoto);
     } catch(e){
-      print(e);
       return ApiResponse.error("Não foi possível salvar foto");
     }
   }

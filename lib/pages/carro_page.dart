@@ -8,6 +8,7 @@ import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/api_response.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CarroPage extends StatefulWidget {
   final Carro carro;
@@ -20,7 +21,6 @@ class CarroPage extends StatefulWidget {
 
 class _CarroPageState extends State<CarroPage> {
   final _descriptionBloc = DescriptionBloc();
-  final _favoritoBloc = FavoritoBloc();
   final _carroBloc = CarrosBloc();
 
   Color color = Colors.grey;
@@ -28,12 +28,12 @@ class _CarroPageState extends State<CarroPage> {
   @override
   void initState() {
     super.initState();
-    _favoritoBloc.isFavorito(widget.carro).then((fav) {
+    _fetchDescription();
+    Provider.of<FavoritoBloc>(context, listen: false).isFavorito(widget.carro).then((fav) {
       setState(() {
         color = fav ? Colors.red : Colors.grey;
       });
     });
-    _fetchDescription();
   }
 
   @override
@@ -189,10 +189,8 @@ class _CarroPageState extends State<CarroPage> {
   _onClickShare() {}
 
   _onClickFavorite() async {
-    bool favoritar = await FavoritoBloc().favoritar(widget.carro);
+    bool favoritar = await Provider.of<FavoritoBloc>(context, listen: false).favoritar(widget.carro);
     setState(() {
-      // ignore: unnecessary_statements
-      print(favoritar);
       color = favoritar ? Colors.red : Colors.grey;
     });
   }
@@ -215,7 +213,6 @@ class _CarroPageState extends State<CarroPage> {
   @override
   void dispose() {
     super.dispose();
-    _favoritoBloc.dispose();
     _descriptionBloc.dispose();
   }
 }

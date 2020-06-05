@@ -11,9 +11,11 @@ class FavoritoBloc extends SimpleBloc<List<Carro>> {
     final dao = FavoritoDao();
     if(await dao.exists(c.id)){
       dao.delete(c.id);
+      fetch();
       return false;
     } else {
       dao.save(f);
+      fetch();
       return true;
     }
   }

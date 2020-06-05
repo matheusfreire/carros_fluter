@@ -2,6 +2,7 @@ import 'package:carros/bloc/favorito_bloc.dart';
 import 'package:carros/model/carro.dart';
 import 'package:carros/widgets/carro_listview.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FavoritosPage extends StatefulWidget {
 
@@ -10,15 +11,14 @@ class FavoritosPage extends StatefulWidget {
 }
 
 class _FavoritosPageState extends State<FavoritosPage> with AutomaticKeepAliveClientMixin<FavoritosPage> {
-  final _bloc = FavoritoBloc();
-
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    _bloc.fetch();
+    FavoritoBloc bloc = Provider.of<FavoritoBloc>(context, listen: false);
+    bloc.fetch();
   }
 
   @override
@@ -26,7 +26,7 @@ class _FavoritosPageState extends State<FavoritosPage> with AutomaticKeepAliveCl
     super.build(context);
 
     return StreamBuilder(
-      stream: _bloc.stream,
+      stream: Provider.of<FavoritoBloc>(context).stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text("Não foi possível buscar os carros");
@@ -48,13 +48,7 @@ class _FavoritosPageState extends State<FavoritosPage> with AutomaticKeepAliveCl
   }
 
   Future<void> _onRefresh() {
-    return _bloc.fetch();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _bloc.dispose();
+    return Provider.of<FavoritoBloc>(context, listen: false).fetch();
   }
 
 }

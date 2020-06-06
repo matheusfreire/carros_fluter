@@ -33,7 +33,7 @@ class ApiInterface {
         return ApiResponse.success(user);
       }
       return ApiResponse.error(mapResponse["error"]);
-    } catch (error, exception) {
+    } catch (error) {
       return ApiResponse.error("Não foi possível fazer o login");
     }
   }
@@ -49,7 +49,7 @@ class ApiInterface {
       List list = jsonDecode(json);
 
       return list.map<Carro>((m) => Carro.fromMap(m)).toList();
-    } catch (error, exception) {
+    } catch (error) {
       throw error;
     }
   }

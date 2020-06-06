@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+@immutable
 class AppText extends StatelessWidget {
   String label;
   String hint;

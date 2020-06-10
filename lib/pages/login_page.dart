@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
     if (response.success) {
       push(context, HomePage(), pushReplace: true);
     } else {
-      alert(context, response.msg);
+      alert(context, "Erro", response.msg);
     }
 
 

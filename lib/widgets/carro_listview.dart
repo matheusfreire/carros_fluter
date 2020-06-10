@@ -3,6 +3,7 @@ import 'package:carros/model/carro.dart';
 import 'package:carros/pages/carro_page.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 
 class CarroListView extends StatelessWidget {
   final List<Carro> carros;
@@ -82,30 +83,43 @@ class CarroListView extends StatelessWidget {
   }
 
   _onLongClickCarro(BuildContext context, Carro c) {
-    showDialog(context: context, builder: (context) {
-      return SimpleDialog(
-        title: Text(c.nome),
-        children: <Widget>[
-          ListTile(
-            title: Text("Detalhes"),
-            leading: Icon(Icons.directions_car),
-            onTap: () {
-              Navigator.pop(context);
-              _onClickCarro(context, c);
-            },
-          ),
-          ListTile(
-            title: Text("Compartilhar"),
-            leading: Icon(Icons.share),
-            onTap: () {
-              _onClickShare(context, c);
-            },
-          )
-        ],
-      );
-    });
+    showModalBottomSheet(
+          context: context,
+          builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  c.nome,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ListTile(
+                title: Text("Detalhes"),
+                leading: Icon(Icons.directions_car),
+                onTap: () {
+                  Navigator.pop(context);
+                  _onClickCarro(context, c);
+                },
+              ),
+              ListTile(
+                title: Text("Compartilhar"),
+                leading: Icon(Icons.share),
+                onTap: () {
+                  _onClickShare(context, c);
+                },
+              )
+            ],
+          );
+        });
   }
 
   _onClickShare(BuildContext context, Carro c) {
+    Share.share(c.urlFoto);
   }
 }

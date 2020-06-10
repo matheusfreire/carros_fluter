@@ -11,6 +11,7 @@ import 'package:carros/utils/event_bus.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CarroPage extends StatefulWidget {
   final Carro carro;
@@ -31,7 +32,7 @@ class _CarroPageState extends State<CarroPage> {
   void initState() {
     super.initState();
     _fetchDescription();
-    Provider.of<FavoritoBloc>(context, listen: false).isFavorito(widget.carro).then((fav) {
+    Provider.of<FavoritoBloc>(context, listen: false).isFavorito(getCarro()).then((fav) {
       setState(() {
         color = fav ? Colors.red : Colors.grey;
       });
@@ -42,7 +43,7 @@ class _CarroPageState extends State<CarroPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.carro.nome),
+          title: Text(getCarro().nome),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.place),
@@ -82,7 +83,7 @@ class _CarroPageState extends State<CarroPage> {
         push(
             context,
             CarroFormPage(
-              carro: widget.carro,
+              carro: getCarro(),
             ));
         break;
       case 2:
@@ -100,7 +101,7 @@ class _CarroPageState extends State<CarroPage> {
       child: ListView(
         children: <Widget>[
           CachedNetworkImage(
-            imageUrl: widget.carro.urlFoto ?? "https://storage.googleapis.com/carros-flutterweb.appspot.com/convite-animado-relampago-mcqueen-carros-2.jpg",
+            imageUrl: getCarro().urlFoto ?? "https://storage.googleapis.com/carros-flutterweb.appspot.com/convite-animado-relampago-mcqueen-carros-2.jpg",
           ),
           _blockOne(),
           Divider(),
@@ -118,7 +119,7 @@ class _CarroPageState extends State<CarroPage> {
           height: 16,
         ),
         Text(
-          widget.carro.descricao,
+          getCarro().descricao,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         SizedBox(
@@ -152,11 +153,11 @@ class _CarroPageState extends State<CarroPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              widget.carro.nome,
+              getCarro().nome,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
-              widget.carro.tipo,
+              getCarro().tipo,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -186,12 +187,20 @@ class _CarroPageState extends State<CarroPage> {
 
   _onClickMapa() {}
 
-  _onClickVideo() {}
+  _onClickVideo() {
+    if(getCarro() != null &&  getCarro().urlVideo.isNotEmpty){
+      launch(getCarro().urlVideo);
+    } else {
+      alert(context, "Erro","Este carro não possui nenhum vídeo");
+    }
+  }
+
+  Carro getCarro() => widget.carro;
 
   _onClickShare() {}
 
   _onClickFavorite() async {
-    bool favoritar = await Provider.of<FavoritoBloc>(context, listen: false).favoritar(widget.carro);
+    bool favoritar = await Provider.of<FavoritoBloc>(context, listen: false).favoritar(getCarro());
     setState(() {
       color = favoritar ? Colors.red : Colors.grey;
     });
@@ -202,14 +211,14 @@ class _CarroPageState extends State<CarroPage> {
   }
 
   void deletar() async {
-    ApiResponse response = await _carroBloc.delete(widget.carro);
+    ApiResponse response = await _carroBloc.delete(getCarro());
     if (response.success) {
-      alert(context, "Carro deletado com sucesso", callBack: () {
-        EventBus.get(context).sendEvent(CarroEvent("carro_deletado", widget.carro.tipo));
+      alert(context,"Carros",  "Carro deletado com sucesso", callBack: () {
+        EventBus.get(context).sendEvent(CarroEvent("carro_deletado", getCarro().tipo));
         Navigator.pop(context);
       });
     } else {
-      alert(context, response.msg);
+      alert(context,"Carros",response.msg);
     }
   }
 

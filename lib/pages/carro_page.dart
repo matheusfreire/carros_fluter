@@ -4,6 +4,7 @@ import 'package:carros/bloc/description_bloc.dart';
 import 'package:carros/bloc/favorito_bloc.dart';
 import 'package:carros/model/carro.dart';
 import 'package:carros/pages/carro_form_page.dart';
+import 'package:carros/pages/mapa_page.dart';
 import 'package:carros/pages/video_page.dart';
 import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/api_response.dart';
@@ -27,13 +28,14 @@ class _CarroPageState extends State<CarroPage> {
   final _descriptionBloc = DescriptionBloc();
   final _carroBloc = CarrosBloc();
 
+  Carro get carro => widget.carro;
   Color color = Colors.grey;
 
   @override
   void initState() {
     super.initState();
     _fetchDescription();
-    Provider.of<FavoritoBloc>(context, listen: false).isFavorito(getCarro()).then((fav) {
+    Provider.of<FavoritoBloc>(context, listen: false).isFavorito(carro).then((fav) {
       setState(() {
         color = fav ? Colors.red : Colors.grey;
       });
@@ -44,7 +46,7 @@ class _CarroPageState extends State<CarroPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(getCarro().nome),
+          title: Text(carro.nome),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.place),
@@ -84,7 +86,7 @@ class _CarroPageState extends State<CarroPage> {
         push(
             context,
             CarroFormPage(
-              carro: getCarro(),
+              carro: carro,
             ));
         break;
       case 2:
@@ -102,7 +104,7 @@ class _CarroPageState extends State<CarroPage> {
       child: ListView(
         children: <Widget>[
           CachedNetworkImage(
-            imageUrl: getCarro().urlFoto ?? "https://storage.googleapis.com/carros-flutterweb.appspot.com/convite-animado-relampago-mcqueen-carros-2.jpg",
+            imageUrl: carro.urlFoto ?? "https://storage.googleapis.com/carros-flutterweb.appspot.com/convite-animado-relampago-mcqueen-carros-2.jpg",
           ),
           _blockOne(),
           Divider(),
@@ -120,7 +122,7 @@ class _CarroPageState extends State<CarroPage> {
           height: 16,
         ),
         Text(
-          getCarro().descricao,
+          carro.descricao,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         SizedBox(
@@ -154,11 +156,11 @@ class _CarroPageState extends State<CarroPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              getCarro().nome,
+              carro.nome,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
-              getCarro().tipo,
+              carro.tipo,
               style: TextStyle(
                 fontSize: 16,
               ),
@@ -186,23 +188,28 @@ class _CarroPageState extends State<CarroPage> {
     );
   }
 
-  _onClickMapa() {}
+  _onClickMapa() {
+    if(carro.latitude != null && carro.longitude != null){
+      push(context, MapaPage(carro));
+    } else {
+      alert(context, "Erro","Este carro não possui coordenadas da fábrica");
+    }
+  }
 
   _onClickVideo() {
-    if(getCarro() != null &&  getCarro().urlVideo.isNotEmpty){
-//      launch(getCarro().urlVideo);
-      push(context, VideoPage(getCarro()));
+    if(carro != null &&  carro.urlVideo.isNotEmpty){
+//      launch(carro.urlVideo);
+      push(context, VideoPage(carro));
     } else {
       alert(context, "Erro","Este carro não possui nenhum vídeo");
     }
   }
 
-  Carro getCarro() => widget.carro;
 
   _onClickShare() {}
 
   _onClickFavorite() async {
-    bool favoritar = await Provider.of<FavoritoBloc>(context, listen: false).favoritar(getCarro());
+    bool favoritar = await Provider.of<FavoritoBloc>(context, listen: false).favoritar(carro);
     setState(() {
       color = favoritar ? Colors.red : Colors.grey;
     });
@@ -213,10 +220,10 @@ class _CarroPageState extends State<CarroPage> {
   }
 
   void deletar() async {
-    ApiResponse response = await _carroBloc.delete(getCarro());
+    ApiResponse response = await _carroBloc.delete(carro);
     if (response.success) {
       alert(context,"Carros",  "Carro deletado com sucesso", callBack: () {
-        EventBus.get(context).sendEvent(CarroEvent("carro_deletado", getCarro().tipo));
+        EventBus.get(context).sendEvent(CarroEvent("carro_deletado", carro.tipo));
         Navigator.pop(context);
       });
     } else {

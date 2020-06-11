@@ -7,6 +7,8 @@
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
+    <key>io.flutter.embedded_views_preview</key>
+    <string>YES</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>O app precisa ter acesso a sua galeria</string>
     <key>NSCameraUsageDescription</key>

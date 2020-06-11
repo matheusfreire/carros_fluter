@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:carros/model/entity.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Carro extends Entity{
   int id;
@@ -21,6 +22,15 @@ class Carro extends Entity{
         this.urlVideo,
         this.latitude,
         this.longitude});
+  
+  latLng(){
+    return LatLng(
+      getPosDouble(latitude),
+      getPosDouble(longitude)
+    );
+  }
+
+  double getPosDouble(String pos) => pos == null || pos.isEmpty ? 0.0 : double.parse(pos);
 
   Carro.fromMap(Map<String, dynamic> map) {
     id = map['id'];

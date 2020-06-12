@@ -30,11 +30,11 @@ class ApiInterface {
       if (response.statusCode == 200) {
         final user = Usuario.fromJson(mapResponse);
         user.save();
-        return ApiResponse.success(user);
+        return ApiResponse.success(result: user);
       }
-      return ApiResponse.error(mapResponse["error"]);
+      return ApiResponse.error(msg: mapResponse["error"]);
     } catch (error) {
-      return ApiResponse.error("Não foi possível fazer o login");
+      return ApiResponse.error(msg:"Não foi possível fazer o login");
     }
   }
 
@@ -89,18 +89,18 @@ class ApiInterface {
       var response = await (c.id == null ? http.post(url, headers: headers, body: carro) : http.put(url, headers: headers, body: carro));
 
       if(response.body == null || response.body.isEmpty){
-        return ApiResponse.error(MSG_GENERICA_ERRO_SALVAR);
+        return ApiResponse.error(msg: MSG_GENERICA_ERRO_SALVAR);
       }
 
       Map mapResponse = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         Carro carroSaved = Carro.fromMap(mapResponse);
         print(carroSaved.id);
-        return ApiResponse.success(carroSaved);
+        return ApiResponse.success(result: carroSaved);
       }
-      return ApiResponse.error(mapResponse["error"]);
+      return ApiResponse.error(msg:mapResponse["error"]);
     } catch (e) {
-      return ApiResponse.error(MSG_GENERICA_ERRO_SALVAR);
+      return ApiResponse.error(msg:MSG_GENERICA_ERRO_SALVAR);
     }
   }
 
@@ -113,16 +113,16 @@ class ApiInterface {
       var response = await http.delete(url, headers: headers);
 
       if(response.body == null || response.body.isEmpty){
-        return ApiResponse.error(MSG_GENERICA_ERRO_DELETE);
+        return ApiResponse.error(msg: MSG_GENERICA_ERRO_DELETE);
       }
 
       Map mapResponse = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        return ApiResponse.success(mapResponse["msg"]);
+        return ApiResponse.success(msg:mapResponse["msg"]);
       }
-      return ApiResponse.error(mapResponse["error"]);
+      return ApiResponse.error(msg: mapResponse["error"]);
     } catch (e) {
-      return ApiResponse.error(MSG_GENERICA_ERRO_DELETE);
+      return ApiResponse.error(msg: MSG_GENERICA_ERRO_DELETE);
     }
   }
 
@@ -146,9 +146,9 @@ class ApiInterface {
       Map<String, dynamic> map = jsonDecode(response.body);
       String urlPhoto = map["url"];
 
-      return ApiResponse.success(urlPhoto);
+      return ApiResponse.success(msg: urlPhoto);
     } catch(e){
-      return ApiResponse.error("Não foi possível salvar foto");
+      return ApiResponse.error(msg: "Não foi possível salvar foto");
     }
   }
 }

@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:carros/bloc/login_bloc.dart';
 import 'package:carros/model/usuario.dart';
 import 'package:carros/pages/home_page.dart';
+import 'package:carros/services/firebase_service.dart';
 import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/api_response.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -29,11 +31,10 @@ class _LoginPageState extends State<LoginPage> {
     Future<Usuario> future = Usuario.get();
     future.then((user) {
       setState(() {
-        if(user != null){
+        if (user != null) {
           push(context, HomePage(), pushReplace: true);
         }
       });
-
     });
   }
 
@@ -82,12 +83,30 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _onClickLogin,
                   showProgress: snapshot.data,
                 );
-              }
+              },
+            ),
+            Container(
+              height: 46,
+              margin: EdgeInsets.only(top: 20),
+              child: GoogleSignInButton(
+                onPressed: _onClickGoogle,
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _onClickGoogle() async {
+    final service = FirebaseService();
+    ApiResponse response = await service.loginGoogle();
+
+    if (response.success) {
+      push(context, HomePage(), pushReplace: true);
+    } else {
+      alert(context, "Erro", response.msg);
+    }
   }
 
   String _validateLogin(String value) {
@@ -120,8 +139,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       alert(context, "Erro", response.msg);
     }
-
-
   }
 
   @override

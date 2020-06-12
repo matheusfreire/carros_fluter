@@ -3,11 +3,11 @@ class ApiResponse<T>{
   String msg;
   T result;
 
-  ApiResponse.success(this.result){
+  ApiResponse.success({this.result, this.msg}){
     success = true;
   }
 
-  ApiResponse.error(this.msg){
+  ApiResponse.error({this.result, this.msg}){
     success = false;
   }
 

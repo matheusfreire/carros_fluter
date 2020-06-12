@@ -1,17 +1,19 @@
 import 'package:carros/model/usuario.dart';
 import 'package:carros/pages/login_page.dart';
+import 'package:carros/services/firebase_service.dart';
 import 'package:carros/utils/nav.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DrawerList extends StatelessWidget {
-  Future<Usuario> future = Usuario.get();
+  Future<FirebaseUser> future = FirebaseAuth.instance.currentUser();
 
-  _header(Usuario user) {
+  _header(FirebaseUser user) {
     return UserAccountsDrawerHeader(
-      accountName: Text(user.nome),
+      accountName: Text(user.displayName),
       accountEmail: Text(user.email),
       currentAccountPicture: CircleAvatar(
-        backgroundImage: NetworkImage(user.urlFoto),
+        backgroundImage: NetworkImage(user.photoUrl),
       ),
     );
   }
@@ -22,10 +24,10 @@ class DrawerList extends StatelessWidget {
       child: Drawer(
         child: ListView(
           children: <Widget>[
-            FutureBuilder<Usuario>(
+            FutureBuilder<FirebaseUser>(
               future: future,
               builder: (context, snapshot) {
-                Usuario user = snapshot.data;
+                FirebaseUser user = snapshot.data;
                 return user != null ? _header(user) : Container();
               },
             ),
@@ -61,6 +63,7 @@ class DrawerList extends StatelessWidget {
 
   _onClickLogout(BuildContext context) {
     Usuario.clear();
+    FirebaseService().signOut();
     Navigator.pop(context);
     push(context, LoginPage(), pushReplace: true);
   }

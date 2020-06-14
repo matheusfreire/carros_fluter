@@ -10,11 +10,13 @@ class DrawerList extends StatelessWidget {
 
   _header(FirebaseUser user) {
     return UserAccountsDrawerHeader(
-      accountName: Text(user.displayName),
+      accountName: Text(user.displayName ?? " "),
       accountEmail: Text(user.email),
-      currentAccountPicture: CircleAvatar(
-        backgroundImage: NetworkImage(user.photoUrl),
-      ),
+      currentAccountPicture: user.photoUrl != null
+          ? CircleAvatar(
+              backgroundImage: NetworkImage(user.photoUrl),
+            )
+          : FlutterLogo(),
     );
   }
 

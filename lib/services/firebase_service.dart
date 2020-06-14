@@ -21,9 +21,33 @@ class FirebaseService {
 
       AuthResult result = await _auth.signInWithCredential(credential);
       final FirebaseUser fUser = result.user;
-      print("Firebase Nome: " + fUser.displayName);
-      print("Firebase Email: " + fUser.email);
-      print("Firebase Foto: " + fUser.photoUrl);
+      print("Firebase Nome: ${fUser.displayName}");
+      print("Firebase Email: ${fUser.email}");
+      print("Firebase Foto: ${fUser.photoUrl}");
+      final user = Usuario(
+        nome: fUser.displayName,
+        login: fUser.email,
+        email: fUser.email,
+        urlFoto: fUser.photoUrl,
+      );
+      user.save();
+
+      // Resposta genérica
+      return ApiResponse.success();
+    } catch (error) {
+      print("Firebase error $error");
+      return ApiResponse.error(msg: "Não foi possível fazer o login");
+    }
+  }
+
+  Future<ApiResponse> loginByMail(String email, String password) async {
+    try {
+
+      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password:password);
+      final FirebaseUser fUser = result.user;
+      print("Firebase Nome: ${fUser.displayName}");
+      print("Firebase Email: ${fUser.email}");
+      print("Firebase Foto: ${fUser.photoUrl}");
       final user = Usuario(
         nome: fUser.displayName,
         login: fUser.email,

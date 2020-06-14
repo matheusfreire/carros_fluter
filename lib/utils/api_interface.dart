@@ -13,7 +13,7 @@ class ApiInterface {
 
   static final MSG_GENERICA_ERRO_DELETE = "Não foi possível deletar o carro";
   static final MSG_GENERICA_ERRO_SALVAR = "Não foi possível salvar o carro";
-  static get api => "https://carros-springboot.herokuapp.com/api/v2";
+  static get api => "https://carros-springboot.herokuapp.com/api/v1";
 
   static Future<ApiResponse<Usuario>> login(String login, String senha) async {
     try {
@@ -58,7 +58,6 @@ class ApiInterface {
     Usuario user = await Usuario.get();
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      "Authorization": "Bearer ${user.token}"
     };
     return headers;
   }

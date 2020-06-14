@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _onClickGoogle() async {
+  _onClickGoogle() async {
     final service = FirebaseService();
     ApiResponse response = await service.loginGoogle();
 

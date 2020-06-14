@@ -55,7 +55,6 @@ class ApiInterface {
   }
 
   static Future<Map<String, String>> _headers() async {
-    Usuario user = await Usuario.get();
     Map<String, String> headers = {
       "Content-Type": "application/json",
     };

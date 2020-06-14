@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:carros/bloc/login_bloc.dart';
 import 'package:carros/model/usuario.dart';
+import 'package:carros/pages/cadastro_page.dart';
 import 'package:carros/pages/home_page.dart';
 import 'package:carros/services/firebase_service.dart';
 import 'package:carros/utils/alert.dart';
@@ -85,11 +86,29 @@ class _LoginPageState extends State<LoginPage> {
                 );
               },
             ),
+            SizedBox(
+              height: 10,
+            ),
             Container(
               height: 46,
               margin: EdgeInsets.only(top: 20),
               child: GoogleSignInButton(
                 onPressed: _onClickGoogle,
+              ),
+            ),
+            Container(
+              height: 46,
+              margin: EdgeInsets.only(top: 20),
+              child: InkWell(
+                onTap: _onClickCadastrar,
+                child: Text(
+                  "Cadastre-se",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline),
+                ),
               ),
             ),
           ],
@@ -145,5 +164,9 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     super.dispose();
     _block.dispose();
+  }
+
+  _onClickCadastrar() {
+    push(context, CadastroPage(), pushReplace: true);
   }
 }

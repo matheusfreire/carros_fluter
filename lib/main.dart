@@ -16,11 +16,6 @@ class MyApp extends StatelessWidget {
           create: (context) => EventBus(),
           dispose: (_,bus) => bus.dispose(),
         ),
-        Provider<FavoritoBloc>(
-          create: (context) => FavoritoBloc(),
-          dispose: (context, bloc) => bloc.dispose(),
-        )
-
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

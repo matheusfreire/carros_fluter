@@ -1,38 +1,30 @@
-import 'package:carros/bloc/simple_bloc.dart';
 import 'package:carros/model/carro.dart';
-import 'package:carros/model/favorito.dart';
-import 'package:carros/utils/db/carro_dao.dart';
-import 'package:carros/utils/db/favorito_dao.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FavoritoBloc extends SimpleBloc<List<Carro>> {
+class FavoritoBloc{
+
+  CollectionReference get _collection => Firestore.instance.collection('carros');
+  Stream<QuerySnapshot> get snapshots => _collection.snapshots();
 
   Future<bool> favoritar(Carro c) async {
-    Favorito f = Favorito.fromCarro(c);
-    final dao = FavoritoDao();
-    if(await dao.exists(c.id)){
-      dao.delete(c.id);
-      fetch();
+    DocumentReference docRef = _collection.document("${c.id}");
+    DocumentSnapshot doc = await docRef.get();
+    final exists = doc.exists;
+    if(exists){
+      docRef.delete();
       return false;
     } else {
-      dao.save(f);
-      fetch();
+      docRef.setData(c.toMap());
       return true;
     }
   }
 
-  Future<List<Carro>> fetch() async {
-    try {
-      List<Carro> carros = await CarroDAO().findAllQuery("select * from carro c, favorito f where c.id = f.id");
-      add(carros);
-      return carros;
-    } catch (error) {
-      addError(error);
-    }
-  }
 
   Future<bool> isFavorito(Carro c) async {
-    final dao = FavoritoDao();
-    return dao.exists(c.id);
+    DocumentReference docRef = _collection.document("${c.id}");
+    DocumentSnapshot doc = await docRef.get();
+    final exists = doc.exists;
+    return exists;
   }
 
 }

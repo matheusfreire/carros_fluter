@@ -1,9 +1,9 @@
+import 'package:carros/bloc/carros_bloc.dart';
 import 'package:carros/bloc/favorito_bloc.dart';
 import 'package:carros/model/carro.dart';
 import 'package:carros/widgets/carro_listview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class FavoritosPage extends StatefulWidget {
 
@@ -25,7 +25,7 @@ class _FavoritosPageState extends State<FavoritosPage> with AutomaticKeepAliveCl
     super.build(context);
 
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('carros').snapshots(),
+      stream: FavoritoBloc().snapshots,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text("Não foi possível buscar os carros");

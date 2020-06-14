@@ -13,7 +13,6 @@ import 'package:carros/utils/event_bus.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class CarroPage extends StatefulWidget {
   final Carro carro;
@@ -31,11 +30,13 @@ class _CarroPageState extends State<CarroPage> {
   Carro get carro => widget.carro;
   Color color = Colors.grey;
 
+  FavoritoBloc get _favBlock => FavoritoBloc();
+
   @override
   void initState() {
     super.initState();
     _fetchDescription();
-    Provider.of<FavoritoBloc>(context, listen: false).isFavorito(carro).then((fav) {
+    _favBlock.isFavorito(carro).then((fav) {
       setState(() {
         color = fav ? Colors.red : Colors.grey;
       });
@@ -209,7 +210,7 @@ class _CarroPageState extends State<CarroPage> {
   _onClickShare() {}
 
   _onClickFavorite() async {
-    bool favoritar = await Provider.of<FavoritoBloc>(context, listen: false).favoritar(carro);
+    bool favoritar = await _favBlock.favoritar(carro);
     setState(() {
       color = favoritar ? Colors.red : Colors.grey;
     });

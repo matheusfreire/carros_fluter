@@ -7,6 +7,7 @@ import 'package:carros/pages/home_page.dart';
 import 'package:carros/services/firebase_service.dart';
 import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/api_response.dart';
+import 'package:carros/utils/firebase.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
@@ -29,6 +30,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+
+    initFcm();
+
     Future<Usuario> future = Usuario.get();
     future.then((user) {
       setState(() {

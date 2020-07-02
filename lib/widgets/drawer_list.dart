@@ -1,5 +1,6 @@
 import 'package:carros/model/usuario.dart';
 import 'package:carros/pages/login_page.dart';
+import 'package:carros/pages/site_page.dart';
 import 'package:carros/services/firebase_service.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,6 +53,13 @@ class DrawerList extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: Icon(Icons.open_in_browser),
+              title: Text("Visite seu site"),
+              onTap: () {
+                _onClickSite(context);
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text("Logout"),
               trailing: Icon(Icons.arrow_forward),
@@ -68,5 +76,10 @@ class DrawerList extends StatelessWidget {
     FirebaseService().signOut();
     Navigator.pop(context);
     push(context, LoginPage(), pushReplace: true);
+  }
+
+  _onClickSite(context) {
+    Navigator.pop(context);
+    push(context, SitePage());
   }
 }

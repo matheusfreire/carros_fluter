@@ -11,8 +11,10 @@ import 'package:carros/utils/firebase.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:local_auth/local_auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -27,18 +29,20 @@ class _LoginPageState extends State<LoginPage> {
 
   final _block = LoginBlock();
 
+  FirebaseUser fUser;
+  var _showForm = false;
+  var localAuth = LocalAuthentication();
+
   @override
   void initState() {
     super.initState();
 
     initFcm();
 
-    Future<Usuario> future = Usuario.get();
-    future.then((user) {
+    FirebaseAuth.instance.currentUser().then((user) {
       setState(() {
-        if (user != null) {
-          push(context, HomePage(), pushReplace: true);
-        }
+        this.fUser = user;
+        _showForm = true;
       });
     });
   }
@@ -115,6 +119,21 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
+            Opacity(
+              opacity: fUser != null ? 1 : 0,
+              child: Container(
+                height: 46,
+                child: InkWell(
+                  onTap: () {
+                    _onClickFingerprint(context);
+                  },
+                  child: Image.asset(
+                    "assets/images/fingerprint.png",
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -172,5 +191,12 @@ class _LoginPageState extends State<LoginPage> {
 
   _onClickCadastrar() {
     push(context, CadastroPage(), pushReplace: true);
+  }
+
+  _onClickFingerprint(BuildContext context) async {
+    bool canCheckBiometrics = await localAuth.authenticateWithBiometrics(
+        localizedReason: "Toque no sensor para autenticar!"
+    );
+    return canCheckBiometrics;
   }
 }
